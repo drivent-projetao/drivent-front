@@ -7,6 +7,14 @@ export default function ChooseHotelMenu() {
   const { hotels } = useHotels();
   const [selectedHotel, setSelectedHotel] = useState(0);
 
+  const handleSelectHotel = (id) => {
+    if (id === selectedHotel) {
+      setSelectedHotel(0);
+    } else {
+      setSelectedHotel(id);
+    }
+  };
+
   return (
     <>
       <MenuHeader>Primeiro, escolha seu hotel</MenuHeader>
@@ -19,7 +27,7 @@ export default function ChooseHotelMenu() {
               name={hotel.name}
               image={hotel.image}
               selected={hotel.id === selectedHotel}
-              handleSelectHotel={() => setSelectedHotel(hotel.id)}
+              handleSelectHotel={() => handleSelectHotel(hotel.id)}
             />
           ))
         ) : (
