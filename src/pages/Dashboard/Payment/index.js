@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import WarningMessage from '../../../components/Hotel/WarningMessage';
 import useEnrollment from '../../../hooks/api/useEnrollment';
 import useTicketType from '../../../hooks/api/useTicketTypes';
 
 export default function Payment() {
   const [hasEnrollment, setHasEnrollment] = useState(false);
   const [isSelected, setIsSelected] = useState(0);
+  const [isHotelSelected, setIsHotelSelected] = useState(0);
+  const [isRemote, setIsRemote] = useState(true);
   const { ticketType } = useTicketType();
   const { enrollment } = useEnrollment();
 
@@ -13,27 +16,67 @@ export default function Payment() {
     if (enrollment) {
       setHasEnrollment(true);
     }
+    console.log(ticketType);
   }, [enrollment, ticketType, hasEnrollment]);
+  
   return (
     <>
+      <PaymentTitle>Ingresso e pagamento</PaymentTitle>
       {hasEnrollment ? (
         <>
-          <PaymentTitle>Ingresso e pagamento</PaymentTitle>
           <PaymentText>Primeiro, escolha sua modalidade de ingresso</PaymentText>
           <CardsContainer>
             {ticketType?.map((type, index) => (
-              <PaymentCard isSelected={isSelected} onClick={() => setIsSelected(type.id)} id={type.id} key={index}>
+              <PaymentCard
+                isSelected={isSelected}
+                onClick={() => {
+                  setIsSelected(type.id);
+                  if (type.isRemote === false) {
+                    setIsRemote(false);
+                  } else {
+                    setIsRemote(true);
+                    setIsHotelSelected(0);
+                  }
+                }}
+                id={type.id}
+                key={index}
+                isHotelSelected={isHotelSelected}
+              >
                 <h2>{type.name}</h2>
                 <h3>R$ {type.price}</h3>
               </PaymentCard>
             ))}
           </CardsContainer>
+          {isRemote ? (
+            ''
+          ) : (
+            <>
+              <PaymentText>Ótimo! Agora escolha sua modalidade de hospedagem</PaymentText>
+              <CardsContainer>
+                <PaymentCard
+                  onClick={() => setIsHotelSelected(1)}
+                  isHotelSelected={isHotelSelected}
+                  index={1}
+                  isSelected={isSelected}
+                >
+                  <h2>Sem Hotel</h2>
+                  <h3>+ R$ 0</h3>
+                </PaymentCard>
+                <PaymentCard
+                  onClick={() => setIsHotelSelected(2)}
+                  isHotelSelected={isHotelSelected}
+                  index={2}
+                  isSelected={isSelected}
+                >
+                  <h2>Com Hotel</h2>
+                  <h3>+ R$ 350</h3>
+                </PaymentCard>
+              </CardsContainer>
+            </>
+          )}
         </>
       ) : (
-        <PaymentMessage>
-          <span>Você precisa completar sua inscrição antes</span>
-          <span>de prosseguir pra escolha de ingresso</span>
-        </PaymentMessage>
+        <WarningMessage message={'Você precisa completar sua inscrição antes\nde prosseguir pra escolha de ingresso'} />
       )}
     </>
   );
@@ -42,7 +85,7 @@ export default function Payment() {
 const PaymentTitle = styled.h1`
   color: black;
   font-size: 34px;
-  margin-bottom: 35px;
+  margin-bottom: 30px;
 `;
 
 const CardsContainer = styled.div`
@@ -61,7 +104,8 @@ const PaymentCard = styled.div`
   flex-direction: column;
   margin-right: 24px;
   margin-bottom: 10px;
-  background-color: ${(props) => (props.isSelected === props.id ? '#FFEED2' : '#FFFFFF')};
+  background-color: ${(props) =>
+    props.isSelected === props.id || props.isHotelSelected === props.index ? '#FFEED2' : '#FFFFFF'};
   h2 {
     color: #454545;
     font-size: 16px;
@@ -73,20 +117,9 @@ const PaymentCard = styled.div`
   }
 `;
 
-const PaymentMessage = styled.div`
-  font-size: 20px;
-  color: #8e8e8e;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  flex-direction: column;
-`;
-
 const PaymentText = styled.p`
   font-size: 20px;
   color: #8e8e8e;
   margin-bottom: 17px;
+  margin-top: 35px;
 `;
