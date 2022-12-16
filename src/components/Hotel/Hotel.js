@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 function getNumberOfAvailableSpots(rooms) {
   return rooms.reduce((acc, curr) => acc + (curr.capacity - curr.bookingCount), 0);
@@ -43,12 +43,12 @@ function getAccomodationMessage(rooms) {
   return accomodationMessage;
 }
 
-export default function Hotel({ id, name, image, rooms, selected, handleSelectHotel }) {
+export default function Hotel({ index, name, image, rooms, selected, handleSelectHotel }) {
   const accomodationMessage = getAccomodationMessage(rooms);
   const numberAvailableSpots = getNumberOfAvailableSpots(rooms);
 
   return (
-    <HotelContainer selected={selected} onClick={handleSelectHotel}>
+    <HotelContainer selected={selected} index={index} onClick={handleSelectHotel}>
       <img src={image} alt="hotel" />
       <div className="hotel-name">{name}</div>
       <div className="hotel-info">
@@ -65,6 +65,11 @@ export default function Hotel({ id, name, image, rooms, selected, handleSelectHo
   );
 }
 
+const fadeInAnimation = keyframes`
+ 0% { opacity: 0; transform: translateY(-20px)}
+ 100% { opacity: 1; transform: translateY(0px) }
+`;
+
 const HotelContainer = styled.div`
   background-color: #ebebeb;
   border-radius: 10px;
@@ -75,6 +80,12 @@ const HotelContainer = styled.div`
   align-items: flex-start;
   padding: 14px;
   cursor: pointer;
+
+  opacity: 0;
+  animation-name: ${fadeInAnimation};
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  animation-delay: ${(props) => `${String(0.5 + 0.2 * props.index)}s`};
   &:hover {
     background-color: ${(props) => (props.selected ? '#FFEED2' : '#ccc')};
     transform: scale(1.02);
