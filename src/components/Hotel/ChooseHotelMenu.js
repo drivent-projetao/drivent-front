@@ -1,31 +1,27 @@
 import styled from 'styled-components';
+import useHotels from '../../hooks/api/useHotels';
+
+function Hotel({ id, name, image }) {
+  return (
+    <div className="hotel">
+      <img src={image} alt="hotel" />
+      <div className="hotel-name">{name}</div>
+    </div>
+  );
+}
 
 export default function ChooseHotelMenu() {
+  const { hotels } = useHotels();
+
   return (
     <>
       <MenuHeader>Primeiro, escolha seu hotel</MenuHeader>
       <HotelBrowser>
-        <div className="hotel">
-          <img
-            src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/380569812.jpg?k=0755f95e7361587eb7b9c9b79ea62d51b8dcef7cba1e3987daecd59e26daa42b&o=&hp=1"
-            alt="hotel"
-          />
-          <div className="hotel-name">Driven Resort</div>
-        </div>
-        <div className="hotel">
-          <img
-            src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/380569812.jpg?k=0755f95e7361587eb7b9c9b79ea62d51b8dcef7cba1e3987daecd59e26daa42b&o=&hp=1"
-            alt="hotel"
-          />
-          <div className="hotel-name">Driven Palace</div>
-        </div>
-        <div className="hotel">
-          <img
-            src="https://cf.bstatic.com/xdata/images/hotel/max1280x900/380569812.jpg?k=0755f95e7361587eb7b9c9b79ea62d51b8dcef7cba1e3987daecd59e26daa42b&o=&hp=1"
-            alt="hotel"
-          />
-          <div className="hotel-name">Driven World</div>
-        </div>
+        {hotels ? (
+          hotels.map((hotel, index) => <Hotel key={index} id={hotel.id} name={hotel.name} image={hotel.image} />)
+        ) : (
+          <></>
+        )}
       </HotelBrowser>
     </>
   );
@@ -55,7 +51,7 @@ const HotelBrowser = styled.div`
     padding: 14px;
     cursor: pointer;
     &:hover {
-      background: linear-gradient(90deg, #fb4298, #fed47f);
+      background: linear-gradient(to right, rgba(250, 64, 152, 0.5), rgba(255, 215, 127, 0.5));
       transform: scale(1.02);
     }
     img {
