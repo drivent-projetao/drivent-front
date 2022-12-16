@@ -2,16 +2,20 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import useHotels from '../../hooks/api/useHotels';
 import Hotel from './Hotel';
+import ChooseRoomMenu from './ChooseRoomMenu';
 
 export default function ChooseHotelMenu() {
   const { hotels } = useHotels();
   const [selectedHotel, setSelectedHotel] = useState(0);
+  const [rooms, setRooms] = useState([]);
 
-  const handleSelectHotel = (id) => {
-    if (id === selectedHotel) {
+  const handleSelectHotel = (hotel) => {
+    if (hotel.id === selectedHotel) {
       setSelectedHotel(0);
+      setRooms([]);
     } else {
-      setSelectedHotel(id);
+      setSelectedHotel(hotel.id);
+      setRooms(hotel.rooms);
     }
   };
 
@@ -28,13 +32,18 @@ export default function ChooseHotelMenu() {
               image={hotel.image}
               rooms={hotel.rooms}
               selected={hotel.id === selectedHotel}
-              handleSelectHotel={() => handleSelectHotel(hotel.id)}
+              handleSelectHotel={() => handleSelectHotel(hotel)}
             />
           ))
         ) : (
           <></>
         )}
       </HotelBrowser>
+      { selectedHotel === 0 ? (
+        <></>
+      ) : (
+        <ChooseRoomMenu rooms={rooms} />
+      )}
     </>
   );
 }
