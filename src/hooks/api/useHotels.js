@@ -10,13 +10,13 @@ export default function useHotels() {
     data: hotels,
     loading: hotelsLoading,
     error: hotelsError,
-    act: gethotels,
+    act: getHotels,
   } = useAsync(() => hotelApi.getHotels(token));
 
   return {
     hotels,
     hotelsLoading,
     hotelsError,
-    gethotels,
+    getHotels,
   };
 }
