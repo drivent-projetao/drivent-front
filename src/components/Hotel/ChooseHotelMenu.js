@@ -50,6 +50,8 @@ const HotelBrowser = styled.div`
   gap: 19px;
   align-items: center;
   justify-content: flex-start;
+  width: 100%;
+  flex-wrap: wrap;
 `;
 
 const HotelContainer = styled.div`
