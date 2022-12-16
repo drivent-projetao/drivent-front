@@ -9,8 +9,11 @@ function getAccomodationMessage(rooms) {
   let capacityDouble = false;
   let capacityTriple = false;
 
+  if (rooms.length === 0) return '';
+
   let i = 0;
   while (!(capacitySingle && capacityDouble && capacityTriple)) {
+    if (i === rooms.length) break;
     const room = rooms[i];
     if (room.capacity === 1) {
       capacitySingle = true;
@@ -18,7 +21,7 @@ function getAccomodationMessage(rooms) {
     if (room.capacity === 2) {
       capacityDouble = true;
     }
-    if (room.capacity === 3) {
+    if (room.capacity >= 3) {
       capacityTriple = true;
     }
     i += 1;
