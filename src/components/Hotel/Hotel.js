@@ -1,6 +1,49 @@
 import styled from 'styled-components';
 
-export default function Hotel({ id, name, image, selected, handleSelectHotel }) {
+function getNumberOfAvailableSpots(rooms) {
+  return rooms.reduce((acc, curr) => acc + (curr.capacity - curr.bookingCount), 0);
+}
+
+function getAccomodationMessage(rooms) {
+  let capacitySingle = false;
+  let capacityDouble = false;
+  let capacityTriple = false;
+
+  let i = 0;
+  while (!(capacitySingle && capacityDouble && capacityTriple)) {
+    const room = rooms[i];
+    if (room.capacity === 1) {
+      capacitySingle = true;
+    }
+    if (room.capacity === 2) {
+      capacityDouble = true;
+    }
+    if (room.capacity === 3) {
+      capacityTriple = true;
+    }
+    i += 1;
+  }
+  const capacities = [
+    { name: 'Single', available: capacitySingle },
+    { name: 'Double', available: capacityDouble },
+    { name: 'Triple', available: capacityTriple },
+  ];
+  const availableCapacities = capacities.filter((e) => e.available).map((e) => e.name);
+  let accomodationMessage = '';
+  if (availableCapacities.length === 3) {
+    accomodationMessage = `${availableCapacities[0]}, ${availableCapacities[1]} e ${availableCapacities[2]}`;
+  } else if (availableCapacities.length === 2) {
+    accomodationMessage = `${availableCapacities[0]} e ${availableCapacities[1]}`;
+  } else if (availableCapacities.length === 1) {
+    accomodationMessage = `${availableCapacities[0]}`;
+  }
+  return accomodationMessage;
+}
+
+export default function Hotel({ id, name, image, rooms, selected, handleSelectHotel }) {
+  const accomodationMessage = getAccomodationMessage(rooms);
+  const numberAvailableSpots = getNumberOfAvailableSpots(rooms);
+
   return (
     <HotelContainer selected={selected} onClick={handleSelectHotel}>
       <img src={image} alt="hotel" />
@@ -8,11 +51,11 @@ export default function Hotel({ id, name, image, selected, handleSelectHotel }) 
       <div className="hotel-info">
         <div className="accomodation">
           <h3>Tipos de acomodação</h3>
-          <p>Single, Double e Triple</p>
+          <p>{accomodationMessage}</p>
         </div>
         <div className="available-rooms">
           <h3>Vagas Disponíveis</h3>
-          <p>103</p>
+          <p>{numberAvailableSpots}</p>
         </div>
       </div>
     </HotelContainer>

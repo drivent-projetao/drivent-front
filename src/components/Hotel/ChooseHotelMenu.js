@@ -26,6 +26,7 @@ export default function ChooseHotelMenu() {
               id={hotel.id}
               name={hotel.name}
               image={hotel.image}
+              rooms={hotel.rooms}
               selected={hotel.id === selectedHotel}
               handleSelectHotel={() => handleSelectHotel(hotel.id)}
             />
