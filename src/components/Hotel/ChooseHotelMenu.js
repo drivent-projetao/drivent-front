@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import useHotels from '../../hooks/api/useHotels';
 import Hotel from './Hotel';
 
@@ -23,7 +23,7 @@ export default function ChooseHotelMenu() {
           hotels.map((hotel, index) => (
             <Hotel
               key={index}
-              id={hotel.id}
+              index={index}
               name={hotel.name}
               image={hotel.image}
               rooms={hotel.rooms}
@@ -38,11 +38,19 @@ export default function ChooseHotelMenu() {
     </>
   );
 }
+const fadeInAnimation = keyframes`
+ 0% { opacity: 0; transform: translateY(-20px)}
+ 100% { opacity: 1; transform: translateY(0px) }
+`;
 
 const MenuHeader = styled.div`
   color: #8e8e8e;
   font-size: 20px;
   margin-bottom: 18px;
+
+  animation-name: ${fadeInAnimation};
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
 `;
 
 const HotelBrowser = styled.div`
