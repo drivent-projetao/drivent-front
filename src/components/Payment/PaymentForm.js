@@ -1,11 +1,10 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import styled from 'styled-components';
 import PaymentContext from '../../contexts/PaymentContext';
 import usePayment from '../../hooks/api/usePayment';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
 
 export default function PaymentForm() {
   const { 
@@ -26,8 +25,6 @@ export default function PaymentForm() {
 
   async function handleForm(e) {
     e.preventDefault();
-    const { issuer } = e.target;
-    console.log(issuer);
 
     const paymentData = {
       ticketId: ticketId,
@@ -112,11 +109,6 @@ const CardBox = styled.div`
 
 const AlignHor = styled.div`
   display: flex;
-`;
-
-const AlignVer = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 
 const AlignInput = styled.div`
