@@ -10,6 +10,7 @@ export function PaymentProvider({ children }) {
   const [cardCVC, setCardCVC] = useState('');
   const [focus, setFocus] = useState('');
   const [ticketId, setTicketId] = useState('');
+  const [paidTicket, setPaidTicket] = useState(false);
 
   return (
     <PaymentContext.Provider value={{ 
@@ -18,7 +19,8 @@ export function PaymentProvider({ children }) {
       cardDate, setCardDate, 
       cardCVC, setCardCVC, 
       focus, setFocus, 
-      ticketId, setTicketId 
+      ticketId, setTicketId,
+      paidTicket, setPaidTicket
     }}>
       {children}
     </PaymentContext.Provider>

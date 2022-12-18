@@ -1,9 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
 import styled from 'styled-components';
 import PaymentContext from '../../contexts/PaymentContext';
 import usePayment from '../../hooks/api/usePayment';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export default function PaymentForm() {
   const { 
@@ -12,10 +14,11 @@ export default function PaymentForm() {
     cardDate, setCardDate, 
     cardCVC, setCardCVC, 
     focus, setFocus,
-    ticketId
+    ticketId, 
+    setPaidTicket
   } = useContext(PaymentContext);
 
-  const { createPayment } = usePayment();
+  const { savePayment } = usePayment();
 
   function handleInputFocus(e) {
     setFocus(e.target.id);
@@ -23,11 +26,13 @@ export default function PaymentForm() {
 
   async function handleForm(e) {
     e.preventDefault();
+    const { issuer } = e.target;
+    console.log(issuer);
 
     const paymentData = {
       ticketId: ticketId,
       cardData: {
-        issuer: 'MASTERCARD',
+        issuer: '',
         number: cardNumber,
         name: cardName,
         expirationDate: cardDate,
@@ -35,64 +40,86 @@ export default function PaymentForm() {
       }
     };
 
-    await createPayment(paymentData);
+    try {
+      await savePayment(paymentData);
+      setPaidTicket(true);
+    } catch (error) {
+      toast('Não foi possível fazer o pagamento!');
+    }
   }
 
   return (
-    <CardBox id="PaymentForm">
-      <Cards
-        cvc={cardCVC}
-        expiry={cardDate}
-        focused={focus}
-        name={cardName}
-        number={cardNumber}
-      />
-      <Form onSubmit={handleForm}>
-        <Input
-          type="number"
-          id="number"
-          placeholder="Número do Cartão"
-          onChange={(e) => setCardNumber(e.target.value)} value={cardNumber}
-          onFocus={(e) => handleInputFocus(e)}
-        />
-        <Input
-          type="name"
-          id="name"
-          placeholder="Nome do Titular"
-          onChange={(e) => setCardName(e.target.value)} value={cardName}
-          onFocus={(e) => handleInputFocus(e)}
-        />
-        <AlignItems>
-          <Input
-            type="number"
-            id="expiry"
-            placeholder="Validade (mm/aa)"
-            onChange={(e) => setCardDate(e.target.value)} value={cardDate}
-            onFocus={(e) => handleInputFocus(e)}
-          />
-          <Input
-            type="number"
-            id='cvc'
-            placeholder="CVV"
-            onChange={(e) => setCardCVC(e.target.value)} value={cardCVC}
-            onFocus={(e) => handleInputFocus(e)}
-          />
-        </AlignItems>
-        <Button>FINALIZAR PAGAMENTO</Button>
-      </Form>
-    </CardBox>
+    <>
+      <CardBox id="PaymentForm">
+        <form onSubmit={handleForm}>
+          <AlignHor>
+            <Cards
+              cvc={cardCVC}
+              expiry={cardDate}
+              focused={focus}
+              name={cardName}
+              number={cardNumber}
+            />
+            <AlignInput>
+              <Input
+                type="number"
+                id="number" required
+                autoComplete='off'
+                maxLength={16}
+                placeholder="Número do Cartão"
+                onChange={(e) => setCardNumber(e.target.value)} value={cardNumber}
+                onFocus={(e) => handleInputFocus(e)}
+              />
+              <Input
+                type="name"
+                id="name" required
+                placeholder="Nome do Titular"
+                onChange={(e) => setCardName(e.target.value)} value={cardName}
+                onFocus={(e) => handleInputFocus(e)}
+              />
+              <AlignItems>
+                <Input
+                  type="number"
+                  id="expiry" required
+                  placeholder="Validade (mm/aa)"
+                  onChange={(e) => setCardDate(e.target.value)} value={cardDate}
+                  onFocus={(e) => handleInputFocus(e)}
+                />
+                <Input
+                  type="number"
+                  id='cvc' required
+                  placeholder="CVV"
+                  onChange={(e) => setCardCVC(e.target.value)} value={cardCVC}
+                  onFocus={(e) => handleInputFocus(e)}
+                />
+              </AlignItems>
+            </AlignInput>
+          </AlignHor>
+          <Button>FINALIZAR PAGAMENTO</Button>
+        </form>
+      </CardBox>
+    </>
   );
 }
 
 const CardBox = styled.div`
   width: 706px;
   display: flex;
-	padding: 12px;
-	padding-left: 0;
-	margin-bottom: 37px;
+  padding: 12px;
+  padding-left: 0;
+  margin-bottom: 37px;
 `;
 
-const Form = styled.form`
+const AlignHor = styled.div`
+  display: flex;
+`;
+
+const AlignVer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const AlignInput = styled.div`
   display: flex;
 	flex-direction: column;
   width: 60%;
@@ -130,5 +157,6 @@ border: 1px solid #e0e0e0;
 background-color: #e0e0e0;
 color: #000000;
 font-size: 14px;
-box-shadow: 1px 1px rgba(0, 0, 0, 0.1);
+box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+margin-top: 37px;
 `;

@@ -4,13 +4,16 @@ import useTicket from '../../hooks/api/useTicket';
 import PaymentForm from './PaymentForm';
 import { useEffect, useState } from 'react';
 import PaymentContext from '../../contexts/PaymentContext';
+import PaidMessage from './PaidMessage';
 
 export default function PaymentPage() {
   const { 
-    setTicketId
+    setTicketId,
+    paidTicket,
+    setPaidTicket
   } = useContext(PaymentContext);
-
   const { ticket } = useTicket();
+  
   const [ticketPrice, setTicketPrice] = useState(0);
   const [ticketType, setTicketType] = useState('');
 
@@ -20,10 +23,21 @@ export default function PaymentPage() {
     if(ticket) {
       setTicketId(ticket.id);
       setTicketPrice(ticket.TicketType.price);
-      ticket.TicketType.isRemote === true ? setTicketType('Online') : setTicketType('Presencial');
-      ticket.TicketType.includesHotel === true ? setTicketType('Presencial + Hotel') : setTicketType('Presencial');
+      
+      if(ticket.TicketType.isRemote === true) {
+        setTicketType('Online');
+      } else if (ticket.TicketType.isRemote === false && ticket.TicketType.includesHotel === true) {
+        setTicketType('Presencial + Hotel');
+        setTicketPrice(hotelPrice + ticket.TicketType.price);
+      } else {
+        setTicketType('Presencial');
+      }
 
-      ticketType === 'Presencial + Hotel' ? setTicketPrice(hotelPrice + ticket.TicketType.price) : setTicketPrice(ticket.TicketType.price);
+      if(ticket.status === 'PAID') {
+        setPaidTicket(true);
+      } else {
+        setPaidTicket(false);
+      }
     }
   }, [ticket, ticketPrice]);
 
@@ -36,7 +50,7 @@ export default function PaymentPage() {
         <PaymentValue>R${ticketPrice}</PaymentValue>
       </PaymentBox>
       <Title>Pagamento</Title>
-      <PaymentForm />
+      {paidTicket === false ? <PaymentForm /> : <PaidMessage />}
     </>
   );
 }

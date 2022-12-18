@@ -1,9 +1,9 @@
 import api from './api';
 
-export async function createPayment(token, paymentData) {
-  console.log(paymentData);
+export async function save(data, token) {
+  console.log(data);
 	
-  const response = await api.post('/payments/process', paymentData, {
+  const response = await api.post('/payments/process', data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
