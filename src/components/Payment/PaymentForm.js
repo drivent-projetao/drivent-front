@@ -14,7 +14,8 @@ export default function PaymentForm() {
     cardCVC, setCardCVC, 
     focus, setFocus,
     ticketId, 
-    setPaidTicket
+    setPaidTicket,
+    cardIssuer, setCardIssuer
   } = useContext(PaymentContext);
 
   const { savePayment } = usePayment();
@@ -23,13 +24,17 @@ export default function PaymentForm() {
     setFocus(e.target.id);
   }
 
+  function handleCallback({ issuer }) {
+    setCardIssuer((issuer).toUpperCase());
+  }
+
   async function handleForm(e) {
     e.preventDefault();
 
     const paymentData = {
       ticketId: ticketId,
       cardData: {
-        issuer: '',
+        issuer: cardIssuer,
         number: cardNumber,
         name: cardName,
         expirationDate: cardDate,
@@ -56,6 +61,7 @@ export default function PaymentForm() {
               focused={focus}
               name={cardName}
               number={cardNumber}
+              callback={handleCallback}
             />
             <AlignInput>
               <Input

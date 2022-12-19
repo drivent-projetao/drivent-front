@@ -12,7 +12,7 @@ export default function PaymentPage() {
   const { 
     setTicketId,
     paidTicket,
-    setPaidTicket
+    setPaidTicket,
   } = useContext(PaymentContext);
   const { ticket } = useTicket();
   const { enrollment } = useEnrollment();
@@ -107,17 +107,3 @@ const PaymentValue = styled.h6`
   font-weight: 400;
 `;
 
-const AlignWarning = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 25vh;
-`;
-
-const WarningText = styled.h5`
-  color: #8e8e8e;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 23.44px;
-  text-align: center;
-`;
