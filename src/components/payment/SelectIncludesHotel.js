@@ -1,12 +1,15 @@
 import { CardsContainer, PaymentCard, PaymentText } from './paymentStyle';
 
-export default function SelectIncludesHotel({ setIsHotelSelected, isHotelSelected, isSelected }) {
+export default function SelectIncludesHotel({ setIsHotelSelected, isHotelSelected, isSelected, setIsAbleToReserve }) {
   return (
     <>
       <PaymentText>Ótimo! Agora escolha sua modalidade de hospedagem</PaymentText>
       <CardsContainer>
         <PaymentCard
-          onClick={() => setIsHotelSelected(1)}
+          onClick={() => {
+            setIsHotelSelected(1);
+            setIsAbleToReserve(true);
+          }}
           isHotelSelected={isHotelSelected}
           index={1}
           isSelected={isSelected}
@@ -15,7 +18,10 @@ export default function SelectIncludesHotel({ setIsHotelSelected, isHotelSelecte
           <h3>+ R$ 0</h3>
         </PaymentCard>
         <PaymentCard
-          onClick={() => setIsHotelSelected(2)}
+          onClick={() => {
+            setIsHotelSelected(2);
+            setIsAbleToReserve(true);
+          }}
           isHotelSelected={isHotelSelected}
           index={2}
           isSelected={isSelected}

@@ -1,15 +1,12 @@
 import { CardsContainer, PaymentCard, PaymentText } from './paymentStyle';
 import SelectIncludesHotel from './SelectIncludesHotel';
+import { useState } from 'react';
 
-export default function SelectTicketType({
-  ticketType,
-  isSelected,
-  setIsSelected,
-  setIsRemote,
-  setIsHotelSelected,
-  isHotelSelected,
-  isRemote,
-}) {
+export default function SelectTicketType({ ticketType, setIsAbleToReserve }) {
+  const [isHotelSelected, setIsHotelSelected] = useState(0);
+  const [isRemote, setIsRemote] = useState(true);
+  const [isSelected, setIsSelected] = useState(0);
+
   return (
     <>
       <PaymentText>Primeiro, escolha sua modalidade de ingresso</PaymentText>
@@ -21,8 +18,12 @@ export default function SelectTicketType({
               setIsSelected(type.id);
               if (type.isRemote === false) {
                 setIsRemote(false);
+                if (isHotelSelected === 0) {
+                  setIsAbleToReserve(false);
+                }
               } else {
                 setIsRemote(true);
+                setIsAbleToReserve(true);
                 setIsHotelSelected(0);
               }
             }}
@@ -39,6 +40,7 @@ export default function SelectTicketType({
         ''
       ) : (
         <SelectIncludesHotel
+          setIsAbleToReserve={setIsAbleToReserve}
           setIsHotelSelected={setIsHotelSelected}
           isHotelSelected={isHotelSelected}
           isSelected={isSelected}

@@ -4,12 +4,11 @@ import { PaymentTitle } from '../../../components/payment/paymentStyle';
 import useEnrollment from '../../../hooks/api/useEnrollment';
 import useTicketType from '../../../hooks/api/useTicketTypes';
 import SelectTicketType from '../../../components/payment/SelectTicketType';
+import ReserveTicket from '../../../components/payment/ReserveTicket';
 
 export default function Payment() {
   const [hasEnrollment, setHasEnrollment] = useState(false);
-  const [isSelected, setIsSelected] = useState(0);
-  const [isHotelSelected, setIsHotelSelected] = useState(0);
-  const [isRemote, setIsRemote] = useState(true);
+  const [isAbleToReserve, setIsAbleToReserve] = useState(false);
   const { ticketType } = useTicketType();
   const { enrollment } = useEnrollment();
 
@@ -23,15 +22,10 @@ export default function Payment() {
     <>
       <PaymentTitle>Ingresso e pagamento</PaymentTitle>
       {hasEnrollment ? (
-        <SelectTicketType
-          ticketType={ticketType}
-          isSelected={isSelected}
-          setIsSelected={setIsSelected}
-          setIsRemote={setIsRemote}
-          setIsHotelSelected={setIsHotelSelected}
-          isHotelSelected={isHotelSelected}
-          isRemote={isRemote}
-        />
+        <>
+          <SelectTicketType setIsAbleToReserve={setIsAbleToReserve} ticketType={ticketType} />
+          {isAbleToReserve ? <ReserveTicket /> : ''}
+        </>
       ) : (
         <WarningMessage message={'Você precisa completar sua inscrição antes\nde prosseguir pra escolha de ingresso'} />
       )}

@@ -40,6 +40,9 @@ const PaymentText = styled.p`
   color: #8e8e8e;
   margin-bottom: 17px;
   margin-top: 35px;
+  span{
+    font-weight: 700;
+  }
 `;
 
 export { PaymentTitle, PaymentText, PaymentCard, CardsContainer };
