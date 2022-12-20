@@ -18,6 +18,7 @@ import Certificate from './pages/Dashboard/Certificate';
 
 import { EventInfoProvider } from './contexts/EventInfoContext';
 import { UserProvider } from './contexts/UserContext';
+import { PaymentProvider } from './contexts/PaymentContext';
 
 import useToken from './hooks/useToken';
 
@@ -42,7 +43,10 @@ export default function App() {
                 }
               >
                 <Route path="subscription" element={<FillSubscription />} />
-                <Route path="payment" element={<Payment />} />
+                <Route path="payment" element={
+                  <PaymentProvider>
+                    <Payment />
+                  </PaymentProvider>} />
                 <Route path="hotel" element={<Hotel />} />
                 <Route path="activities" element={<Activities />} />
                 <Route path="certificate" element={<Certificate />} />
