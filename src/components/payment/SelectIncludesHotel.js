@@ -23,7 +23,7 @@ export default function SelectIncludesHotel({
             isSelected={isSelected}
           >
             <h2>{type.includesHotel === true ? 'Com Hotel' : 'Sem Hotel'}</h2>
-            <h3>{type.includesHotel === true ? '+ R$ 350' : '+ R$ 0'}</h3>
+            <h3>{type.includesHotel === true ? `+ R$ ${Math.abs(ticketTypeInPerson[0].price - ticketTypeInPerson[1].price)}` : '+ R$ 0'}</h3>
           </PaymentCard>
         ))}
       </CardsContainer>
