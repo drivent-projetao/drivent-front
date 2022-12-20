@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import useTicket from '../../hooks/api/useTicket';
-import WarningMessage from './WarningMessage';
+import WarningMessage from '../WarningMessage';
 
 export default function ActivitiesPage() {
   const { ticket } = useTicket();

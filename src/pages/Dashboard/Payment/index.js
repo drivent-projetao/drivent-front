@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import WarningMessage from '../../../components/Hotel/WarningMessage';
+import WarningMessage from '../../../components/WarningMessage';
 import { PaymentTitle } from '../../../components/payment/paymentStyle';
 import useEnrollment from '../../../hooks/api/useEnrollment';
 import useTicketType from '../../../hooks/api/useTicketTypes';
