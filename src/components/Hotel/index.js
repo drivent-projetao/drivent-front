@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import useTicket from '../../hooks/api/useTicket';
-import ChooseHotelMenu from './ChooseHotelMenu';
 import WarningMessage from './WarningMessage';
+import Menu from './Menu';
 
 export default function HotelPage() {
   const { ticket } = useTicket();
@@ -13,11 +13,15 @@ export default function HotelPage() {
     warningMessage = 'Sua modalidade de ingresso não inclui hospedagem. Prossiga para a escolha de atividades';
   }
 
-  return (
+  return (    
     <>
       <PageHeader>Escolha de hotel e quarto</PageHeader>
-      {warningMessage ? <WarningMessage message={warningMessage} /> : <ChooseHotelMenu />}
-    </>
+      {warningMessage ? (
+        <WarningMessage message={warningMessage} />
+      ) : (
+        <Menu />
+      )}
+    </>  
   );
 }
 

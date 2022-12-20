@@ -1,9 +1,19 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
+
+import useBooking from '../../hooks/api/useBooking';
+import useSaveBooking from '../../hooks/api/useSaveBooking';
+import useUpdateBooking from '../../hooks/api/useUpdateBooking';
+
 import Room from './Room';
 
-export default function ChooseRoomMenu({ rooms }) {
+export default function ChooseRoomMenu({ rooms, setIsBooking }) {
   const [selectedRoom, setSelectedRoom] = useState(0);
+
+  const { booking } = useBooking();
+  const { saveBooking } = useSaveBooking();
+  const { changeBooking } = useUpdateBooking();
 
   const handleSelectRoom = (room) => {
     if (room.id === selectedRoom) {
@@ -13,23 +23,41 @@ export default function ChooseRoomMenu({ rooms }) {
     }
   };
 
+  async function sendBooking(roomId) {
+    try {
+      if(booking) {
+        await changeBooking(booking.id, { roomId });
+        setIsBooking(true);
+        return toast('Reserva realizada com sucesso!');
+      }
+      await saveBooking({ roomId });
+      setIsBooking(true);
+      toast('Reserva realizada com sucesso!');
+    } catch (err) {
+      toast('Não foi possível realizar a reserva!');
+    }
+  } 
+
   return(
     <>
       <MenuHeader>Ótima pedida! Agora escolha seu quarto:</MenuHeader>
       <RoomBrowser>
         {rooms.map( room => (
-          <Room
+          <Room 
             key={room.id}
-            id={room.id}
-            name={room.name}
-            capacity={room.capacity}
-            bookingCount={room.bookingCount}
+            room={room}
             selected={room.id === selectedRoom}
             handleSelectRoom={() => handleSelectRoom(room)}
           />
         ))}
       </RoomBrowser>
-      <BookButton>RESERVAR QUARTO</BookButton>
+      { selectedRoom === 0 ? (
+        <></>
+      ): (
+        <BookButton onClick={() => sendBooking(selectedRoom)}>
+          RESERVAR QUARTO
+        </BookButton> 
+      )}      
     </>
   );
 }
@@ -49,7 +77,7 @@ const RoomBrowser = styled.div`
   justify-content: flex-start;
 `;
 
-const BookButton = styled.button`
+export const BookButton = styled.button`
   width: 182px;
   height: 37px;
   margin-top: 57px;

@@ -1,38 +1,44 @@
 import styled from 'styled-components';
-import { BsPerson, BsPersonFill } from 'react-icons/bs';
-import { useState } from 'react';
+import Icon from './Icon';
 
-export default function Room({ id, name, capacity, bookingCount, selected, handleSelectRoom }) {
-  const [isFull, setIsFull] = useState(false);
+function getIconsArray(capacity, bookingCount) {
+  let icons = [];
 
-  if (capacity === bookingCount) {
-    setIsFull(true);
+  for (let i = capacity; i > 0; i--) {
+    let status;
+
+    if (i - bookingCount > 0) {
+      status = 'empty';
+    } else {
+      status = 'filled';
+    }
+
+    let icon = {
+      spot: i,
+      status: status,
+    };
+
+    icons.push(icon);
   }
+  return icons;
+}
+
+function checkVacancy(capacity, bookingCount) {
+  if(capacity === bookingCount) return true;
+  return false;
+}
+
+export default function Room({ room, selected, handleSelectRoom  }) {
+  const icons = getIconsArray(room.capacity, room.bookingCount);
+  const isFull = checkVacancy(room.capacity, room.bookingCount);
 
   return (
     <RoomContainer isFull={isFull} selected={selected} onClick={handleSelectRoom}>
-      {name}
+      {room.name}
       <IconsContainer>
-        { capacity === 1 ? (
-          <>
-            {isFull ? <BsPersonFill className='icon' /> : <BsPerson className='icon' />}
-          </>
-        ) : (
-          <>
-            { capacity === 2 ? (
-              <>
-                <BsPerson className='icon' />
-                <BsPerson className='icon' />
-              </>
-            ) : (
-              <>
-                <BsPerson className='icon' />
-                <BsPerson className='icon' />
-                <BsPerson className='icon' />
-              </>
-            )}
-          </>
-        )}
+        {icons.map(icon => (
+          <Icon key={icon.spot} icon={icon}/>
+        ))}
       </IconsContainer>
     </RoomContainer>
   );
@@ -57,20 +63,12 @@ const RoomContainer = styled.div`
         props.selected? '#FFEED2' : 'transparent'
       ))};
 
-  .icon {
-    font-size: 20px;
-
-    :last-child {
-        color: ${(props) => (props.selected ? '#FF4791' : '#000')};
-    }
-  }
-
   &:hover {
-    transform: ${(props) => (props.isFull ? '' : 'scale(1.05)')};;
+    transform: ${(props) => (props.isFull ? '' : 'scale(1.05)')};
   }
 `;
 
 const IconsContainer = styled.div`
     display: flex;
-    gap: 5px;
+    gap: 5px;  
 `;

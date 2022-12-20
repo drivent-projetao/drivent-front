@@ -4,7 +4,7 @@ function getNumberOfAvailableSpots(rooms) {
   return rooms.reduce((acc, curr) => acc + (curr.capacity - curr.bookingCount), 0);
 }
 
-function getAccomodationMessage(rooms) {
+function getAccommodationMessage(rooms) {
   let capacitySingle = false;
   let capacityDouble = false;
   let capacityTriple = false;
@@ -41,7 +41,7 @@ function getAccomodationMessage(rooms) {
 }
 
 export default function Hotel({ id, name, image, rooms, selected, handleSelectHotel }) {
-  const accomodationMessage = getAccomodationMessage(rooms);
+  const accomodationMessage = getAccommodationMessage(rooms);
   const numberAvailableSpots = getNumberOfAvailableSpots(rooms);
 
   return (
