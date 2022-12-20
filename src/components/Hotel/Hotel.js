@@ -4,7 +4,7 @@ function getNumberOfAvailableSpots(rooms) {
   return rooms.reduce((acc, curr) => acc + (curr.capacity - curr.bookingCount), 0);
 }
 
-function getAccomodationMessage(rooms) {
+function getAccommodationMessage(rooms) {
   let capacitySingle = false;
   let capacityDouble = false;
   let capacityTriple = false;
@@ -32,19 +32,19 @@ function getAccomodationMessage(rooms) {
     { name: 'Triple', available: capacityTriple },
   ];
   const availableCapacities = capacities.filter((e) => e.available).map((e) => e.name);
-  let accomodationMessage = '';
+  let accommodationMessage = '';
   if (availableCapacities.length === 3) {
-    accomodationMessage = `${availableCapacities[0]}, ${availableCapacities[1]} e ${availableCapacities[2]}`;
+    accommodationMessage = `${availableCapacities[0]}, ${availableCapacities[1]} e ${availableCapacities[2]}`;
   } else if (availableCapacities.length === 2) {
-    accomodationMessage = `${availableCapacities[0]} e ${availableCapacities[1]}`;
+    accommodationMessage = `${availableCapacities[0]} e ${availableCapacities[1]}`;
   } else if (availableCapacities.length === 1) {
-    accomodationMessage = `${availableCapacities[0]}`;
+    accommodationMessage = `${availableCapacities[0]}`;
   }
-  return accomodationMessage;
+  return accommodationMessage;
 }
 
 export default function Hotel({ index, name, image, rooms, selected, handleSelectHotel }) {
-  const accomodationMessage = getAccomodationMessage(rooms);
+  const accommodationMessage = getAccommodationMessage(rooms);
   const numberAvailableSpots = getNumberOfAvailableSpots(rooms);
 
   return (
@@ -52,9 +52,9 @@ export default function Hotel({ index, name, image, rooms, selected, handleSelec
       <img src={image} alt="hotel" />
       <div className="hotel-name">{name}</div>
       <div className="hotel-info">
-        <div className="accomodation">
+        <div className="accommodation">
           <h3>Tipos de acomodação</h3>
-          <p>{accomodationMessage}</p>
+          <p>{accommodationMessage}</p>
         </div>
         <div className="available-rooms">
           <h3>Vagas Disponíveis</h3>
@@ -70,7 +70,7 @@ const fadeInAnimation = keyframes`
  100% { opacity: 1; transform: translateY(0px) }
 `;
 
-const HotelContainer = styled.div`
+export const HotelContainer = styled.div`
   background-color: #ebebeb;
   border-radius: 10px;
   width: 196px;
@@ -107,7 +107,7 @@ const HotelContainer = styled.div`
     flex-direction: column;
     gap: 14px;
     font-size: 12px;
-    .accomodation,
+    .accommodation,
     .available-rooms {
       h3 {
         font-weight: 700;

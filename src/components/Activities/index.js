@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import useTicket from '../../hooks/api/useTicket';
-import WarningMessage from './WarningMessage';
+import WarningMessage from '../WarningMessage';
+import ActivitiesTab from './ActivitiesTab';
 
 export default function ActivitiesPage() {
   const { ticket } = useTicket();
@@ -16,12 +17,12 @@ export default function ActivitiesPage() {
   return (
     <>
       <PageHeader>Escolha de atividades</PageHeader>
-      {warningMessage ? <WarningMessage message={warningMessage} /> : <></>}
+      {warningMessage ? <WarningMessage message={warningMessage} /> : <ActivitiesTab />}
     </>
   );
 }
 
 const PageHeader = styled.div`
   font-size: 34px;
-  margin-bottom: 36px;
+  margin-bottom: 27px;
 `;

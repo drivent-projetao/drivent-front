@@ -10,7 +10,7 @@ export default function WarningMessage({ message }) {
 
 const WarningMsgContainer = styled.div`
   width: 100%;
-  height: calc(100% - 130px);
+  height: calc(100% - 100px);
   display: flex;
   align-items: center;
   justify-content: center;
