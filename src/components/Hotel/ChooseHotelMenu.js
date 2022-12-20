@@ -1,20 +1,7 @@
-import { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import useHotels from '../../hooks/api/useHotels';
 import Hotel from './Hotel';
 
-export default function ChooseHotelMenu() {
-  const { hotels } = useHotels();
-  const [selectedHotel, setSelectedHotel] = useState(0);
-
-  const handleSelectHotel = (id) => {
-    if (id === selectedHotel) {
-      setSelectedHotel(0);
-    } else {
-      setSelectedHotel(id);
-    }
-  };
-
+export default function ChooseHotelMenu({ hotels, selectedHotel, handleSelectHotel }) {
   return (
     <>
       <MenuHeader>Primeiro, escolha seu hotel</MenuHeader>
@@ -28,7 +15,7 @@ export default function ChooseHotelMenu() {
               image={hotel.image}
               rooms={hotel.rooms}
               selected={hotel.id === selectedHotel}
-              handleSelectHotel={() => handleSelectHotel(hotel.id)}
+              handleSelectHotel={() => handleSelectHotel(hotel)}
             />
           ))
         ) : (
