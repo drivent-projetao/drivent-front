@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import useTicket from '../../hooks/api/useTicket';
-import WarningMessage from './WarningMessage';
+import WarningMessage from '../WarningMessage';
 import Menu from './Menu';
 
 export default function HotelPage() {
