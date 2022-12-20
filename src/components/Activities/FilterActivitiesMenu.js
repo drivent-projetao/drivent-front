@@ -1,19 +1,16 @@
 import styled, { keyframes } from 'styled-components';
-import { useState } from 'react';
 
-function Date({ content, selected, handleSelectDate }) {
+function Date({ content, index, selected, handleSelectDate }) {
   return (
     <>
-      <DateContainer selected={selected} onClick={handleSelectDate}>
+      <DateContainer index={index} selected={selected} onClick={handleSelectDate}>
         <h3>{content}</h3>
       </DateContainer>
     </>
   );
 }
 
-export default function FilterActivitiesMenu() {
-  const [selectedDate, setSelectedDate] = useState('');
-
+export default function FilterActivitiesMenu({ dates, selectedDate, setSelectedDate }) {
   const handleSelectDate = (date) => {
     if (date === selectedDate) {
       setSelectedDate('');
@@ -21,17 +18,19 @@ export default function FilterActivitiesMenu() {
       setSelectedDate(date);
     }
   };
-  const dates = [{ name: 'Sexta, 22/10' }, { name: 'Sábado, 23/10' }, { name: 'Domingo, 24/10' }];
+  const datesUnique = [...new Set(dates)];
 
   return (
     <>
-      <MenuHeader>Primeiro, filtre pelo dia do evento</MenuHeader>
+      {selectedDate === '' ? <MenuHeader>Primeiro, filtre pelo dia do evento</MenuHeader> : <></>}
       <DayBrowser>
-        {dates.map((date) => (
+        {datesUnique.map((date, index) => (
           <Date
-            content={date.name}
-            selected={date.name === selectedDate}
-            handleSelectDate={() => handleSelectDate(date.name)}
+            key={index}
+            index={index}
+            content={date}
+            selected={date === selectedDate}
+            handleSelectDate={() => handleSelectDate(date)}
           ></Date>
         ))}
       </DayBrowser>
@@ -62,6 +61,7 @@ const DayBrowser = styled.div`
   justify-content: flex-start;
   width: 100%;
   flex-wrap: wrap;
+  margin-bottom: 61px;
 `;
 
 const DateContainer = styled.div`
@@ -77,6 +77,12 @@ const DateContainer = styled.div`
   color: black;
   line-height: 16.41px;
   cursor: pointer;
+
+  opacity: 0;
+  animation-name: ${fadeInAnimation};
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  animation-delay: ${(props) => `${String(0.5 + 0.2 * props.index)}s`};
   &:hover {
     background-color: ${(props) => (props.selected ? '#FFD37D' : '#ccc')};
   }
