@@ -1,19 +1,27 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
+import useHotels from '../../hooks/api/useHotels';
 import useBooking from '../../hooks/api/useBooking';
 import useSaveBooking from '../../hooks/api/useSaveBooking';
 import useUpdateBooking from '../../hooks/api/useUpdateBooking';
 
 import Room from './Room';
 
-export default function ChooseRoomMenu({ rooms, setIsBooking }) {
+export default function ChooseRoomMenu({ 
+  rooms,
+  setHotels, 
+  setBooking, 
+  setIsBooking,
+  setSelectedHotel
+}) {
   const [selectedRoom, setSelectedRoom] = useState(0);
 
-  const { booking } = useBooking();
+  const { getHotels } = useHotels();
   const { saveBooking } = useSaveBooking();
   const { changeBooking } = useUpdateBooking();
+  const { booking, getBooking } = useBooking();
 
   const handleSelectRoom = (room) => {
     if (room.id === selectedRoom) {
@@ -23,15 +31,28 @@ export default function ChooseRoomMenu({ rooms, setIsBooking }) {
     }
   };
 
+  const updateData = async() => {
+    const newBooking = await getBooking();
+    const hotels = await getHotels();
+
+    setBooking(newBooking);
+    setHotels(hotels);
+    setIsBooking(true);
+    setSelectedHotel(0);
+  };
+
   async function sendBooking(roomId) {
     try {
       if(booking) {
         await changeBooking(booking.id, { roomId });
-        setIsBooking(true);
+        updateData();
+        
         return toast('Reserva realizada com sucesso!');
       }
       await saveBooking({ roomId });
+      updateData();
       setIsBooking(true);
+
       toast('Reserva realizada com sucesso!');
     } catch (err) {
       toast('Não foi possível realizar a reserva!');
@@ -54,7 +75,9 @@ export default function ChooseRoomMenu({ rooms, setIsBooking }) {
       { selectedRoom === 0 ? (
         <></>
       ): (
-        <BookButton onClick={() => sendBooking(selectedRoom)}>
+        <BookButton 
+          onClick={() => sendBooking(selectedRoom)}
+        >
           RESERVAR QUARTO
         </BookButton> 
       )}      
@@ -62,10 +85,19 @@ export default function ChooseRoomMenu({ rooms, setIsBooking }) {
   );
 }
 
-const MenuHeader = styled.div`
+const fadeInAnimation = keyframes`
+ 0% { opacity: 0; transform: translateY(-20px)}
+ 100% { opacity: 1; transform: translateY(0px)}
+`;
+
+export const MenuHeader = styled.div`
   color: #8e8e8e;
   font-size: 20px;
   margin: 33px 0;
+
+  animation-name: ${fadeInAnimation};
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
 `;
 
 const RoomBrowser = styled.div`
@@ -75,6 +107,10 @@ const RoomBrowser = styled.div`
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
+
+  animation-name: ${fadeInAnimation};
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
 `;
 
 export const BookButton = styled.button`
@@ -88,11 +124,15 @@ export const BookButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
 
-  :hover {
+  opacity: 0;
+  animation-name: ${fadeInAnimation};
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  animation-delay: .5s;
+  &:hover {
     opacity: .8;
   }
-
-  :active {
+  &:active {
     transform: scale(0.98);
   }
 `;

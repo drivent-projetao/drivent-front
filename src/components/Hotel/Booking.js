@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-
-import { BookButton } from './ChooseRoomMenu';
+import { BookButton, MenuHeader } from './ChooseRoomMenu';
+import { HotelContainer } from './Hotel';
 
 import useHotelById from '../../hooks/api/useHotel';
 import useCountBooking from '../../hooks/api/useCountBooking';
@@ -33,7 +32,7 @@ export default function Booking({ userBooking, setIsBooking }) {
   return(
     <>
       <MenuHeader>Você já escolheu seu quarto:</MenuHeader>
-      <HotelContainer>
+      <HotelContainer selected={true}>
         <img src={hotel?.image} alt="hotel" />
         <div className="hotel-name">{hotel?.name}</div>
         <div className="hotel-info">
@@ -60,53 +59,3 @@ export default function Booking({ userBooking, setIsBooking }) {
     </>
   );
 }
-
-const MenuHeader = styled.div`
-  color: #8e8e8e;
-  font-size: 20px;
-  margin-bottom: 18px;
-`;
-
-const HotelContainer = styled.div`
-  background-color: #ebebeb;
-  border-radius: 10px;
-  width: 196px;
-  height: 264px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 14px;
-  background-color: #FFEED2;
-
-  img {
-    width: 168px;
-    height: 109px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  .hotel-name {
-    font-size: 20px;
-    margin-bottom: 14px;
-  }
-
-  .hotel-info {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    font-size: 12px;
-    .accommodation,
-    .available-rooms {
-      h3 {
-        font-weight: 700;
-        line-height: 14.06px;
-        margin-bottom: 3px;
-      }
-      p {
-        font-weight: 400;
-        font-size: 12px;
-        line-height: 14px;
-        color: #3C3C3C;
-      }
-    }
-  }
-`;

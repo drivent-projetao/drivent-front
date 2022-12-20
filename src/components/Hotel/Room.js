@@ -16,6 +16,7 @@ function getIconsArray(capacity, bookingCount) {
     let icon = {
       spot: i,
       status: status,
+      bookingCount: bookingCount,
     };
 
     icons.push(icon);
@@ -37,7 +38,7 @@ export default function Room({ room, selected, handleSelectRoom  }) {
       {room.name}
       <IconsContainer>
         {icons.map(icon => (
-          <Icon key={icon.spot} icon={icon}/>
+          <Icon key={icon.spot} icon={icon} selected={selected}/>
         ))}
       </IconsContainer>
     </RoomContainer>

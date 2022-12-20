@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 function getNumberOfAvailableSpots(rooms) {
   return rooms.reduce((acc, curr) => acc + (curr.capacity - curr.bookingCount), 0);
@@ -9,8 +9,11 @@ function getAccommodationMessage(rooms) {
   let capacityDouble = false;
   let capacityTriple = false;
 
+  if (rooms.length === 0) return '';
+
   let i = 0;
   while (!(capacitySingle && capacityDouble && capacityTriple)) {
+    if (i === rooms.length) break;
     const room = rooms[i];
     if (room.capacity === 1) {
       capacitySingle = true;
@@ -18,7 +21,7 @@ function getAccommodationMessage(rooms) {
     if (room.capacity === 2) {
       capacityDouble = true;
     }
-    if (room.capacity === 3) {
+    if (room.capacity >= 3) {
       capacityTriple = true;
     }
     i += 1;
@@ -29,29 +32,29 @@ function getAccommodationMessage(rooms) {
     { name: 'Triple', available: capacityTriple },
   ];
   const availableCapacities = capacities.filter((e) => e.available).map((e) => e.name);
-  let accomodationMessage = '';
+  let accommodationMessage = '';
   if (availableCapacities.length === 3) {
-    accomodationMessage = `${availableCapacities[0]}, ${availableCapacities[1]} e ${availableCapacities[2]}`;
+    accommodationMessage = `${availableCapacities[0]}, ${availableCapacities[1]} e ${availableCapacities[2]}`;
   } else if (availableCapacities.length === 2) {
-    accomodationMessage = `${availableCapacities[0]} e ${availableCapacities[1]}`;
+    accommodationMessage = `${availableCapacities[0]} e ${availableCapacities[1]}`;
   } else if (availableCapacities.length === 1) {
-    accomodationMessage = `${availableCapacities[0]}`;
+    accommodationMessage = `${availableCapacities[0]}`;
   }
-  return accomodationMessage;
+  return accommodationMessage;
 }
 
-export default function Hotel({ id, name, image, rooms, selected, handleSelectHotel }) {
-  const accomodationMessage = getAccommodationMessage(rooms);
+export default function Hotel({ index, name, image, rooms, selected, handleSelectHotel }) {
+  const accommodationMessage = getAccommodationMessage(rooms);
   const numberAvailableSpots = getNumberOfAvailableSpots(rooms);
 
   return (
-    <HotelContainer selected={selected} onClick={handleSelectHotel}>
+    <HotelContainer selected={selected} index={index} onClick={handleSelectHotel}>
       <img src={image} alt="hotel" />
       <div className="hotel-name">{name}</div>
       <div className="hotel-info">
-        <div className="accomodation">
+        <div className="accommodation">
           <h3>Tipos de acomodação</h3>
-          <p>{accomodationMessage}</p>
+          <p>{accommodationMessage}</p>
         </div>
         <div className="available-rooms">
           <h3>Vagas Disponíveis</h3>
@@ -62,7 +65,12 @@ export default function Hotel({ id, name, image, rooms, selected, handleSelectHo
   );
 }
 
-const HotelContainer = styled.div`
+const fadeInAnimation = keyframes`
+ 0% { opacity: 0; transform: translateY(-20px)}
+ 100% { opacity: 1; transform: translateY(0px) }
+`;
+
+export const HotelContainer = styled.div`
   background-color: #ebebeb;
   border-radius: 10px;
   width: 196px;
@@ -72,6 +80,12 @@ const HotelContainer = styled.div`
   align-items: flex-start;
   padding: 14px;
   cursor: pointer;
+
+  opacity: 0;
+  animation-name: ${fadeInAnimation};
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  animation-delay: ${(props) => `${String(0.5 + 0.2 * props.index)}s`};
   &:hover {
     background-color: ${(props) => (props.selected ? '#FFEED2' : '#ccc')};
     transform: scale(1.02);
@@ -93,7 +107,7 @@ const HotelContainer = styled.div`
     flex-direction: column;
     gap: 14px;
     font-size: 12px;
-    .accomodation,
+    .accommodation,
     .available-rooms {
       h3 {
         font-weight: 700;
