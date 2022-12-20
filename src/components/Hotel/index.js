@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import useTicket from '../../hooks/api/useTicket';
 import ChooseHotelMenu from './ChooseHotelMenu';
-import WarningMessage from './WarningMessage';
+import WarningMessage from '../WarningMessage';
 
 export default function HotelPage() {
   const { ticket } = useTicket();
