@@ -21,7 +21,7 @@ export default function ActivitiesTab() {
           <h2>Activities Cronogram</h2>
           <br />
           {filteredActivities.map((a, index) => (
-            <h1 key={index}>{`${a.name} - ${a.startTime} - ${a.startTime}`}</h1>
+            <h1 key={index}>{`${a.name} - ${a.startTime} - ${a.endTime}`}</h1>
           ))}
         </>
       ) : (
