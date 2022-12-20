@@ -16,10 +16,14 @@ export default function ActivitiesTab() {
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
       />
-      <h2>ActivitiesCronogram</h2>
-      <br />
-      {filteredActivities ? (
-        filteredActivities.map((a, index) => <h1 key={index}>{`${a.name} - ${a.startTime} - ${a.startTime}`}</h1>)
+      {filteredActivities?.length >= 1 ? (
+        <>
+          <h2>Activities Cronogram</h2>
+          <br />
+          {filteredActivities.map((a, index) => (
+            <h1 key={index}>{`${a.name} - ${a.startTime} - ${a.startTime}`}</h1>
+          ))}
+        </>
       ) : (
         <></>
       )}
