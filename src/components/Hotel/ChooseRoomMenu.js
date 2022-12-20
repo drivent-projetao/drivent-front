@@ -51,7 +51,6 @@ export default function ChooseRoomMenu({
       }
       await saveBooking({ roomId });
       updateData();
-      setIsBooking(true);
 
       toast('Reserva realizada com sucesso!');
     } catch (err) {

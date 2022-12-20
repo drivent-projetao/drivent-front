@@ -33,9 +33,13 @@ export default function Menu() {
   }, []);
 
   useEffect(async() => {
-    const data = await getBooking();
-    setBooking(data);
-    setIsBooking(true);
+    try {
+      const data = await getBooking();
+      setBooking(data);
+      setIsBooking(true);
+    } catch (error) {
+      setBooking([]);
+    }   
   }, []);
 
   return (
