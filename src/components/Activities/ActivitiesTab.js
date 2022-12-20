@@ -5,6 +5,7 @@ import { useState } from 'react';
 export default function ActivitiesTab() {
   const [selectedDate, setSelectedDate] = useState('');
   const { activitiesWithDates } = useActivitiesWithDates();
+
   const filteredDates = activitiesWithDates?.dates.map((d) => d === selectedDate);
   const filteredActivities = activitiesWithDates?.activities.filter((a, i) => filteredDates[i]);
 
