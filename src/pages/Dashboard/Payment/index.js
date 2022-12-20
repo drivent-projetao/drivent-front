@@ -24,7 +24,7 @@ export default function Payment() {
       {hasEnrollment ? (
         <>
           <SelectTicketType setIsAbleToReserve={setIsAbleToReserve} ticketType={ticketType} />
-          {isAbleToReserve ? <ReserveTicket /> : ''}
+          {isAbleToReserve ? <ReserveTicket isAbleToReserve={isAbleToReserve} /> : ''}
         </>
       ) : (
         <WarningMessage message={'Você precisa completar sua inscrição antes\nde prosseguir pra escolha de ingresso'} />

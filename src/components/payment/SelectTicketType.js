@@ -3,28 +3,31 @@ import SelectIncludesHotel from './SelectIncludesHotel';
 import { useState } from 'react';
 
 export default function SelectTicketType({ ticketType, setIsAbleToReserve }) {
-  const [isHotelSelected, setIsHotelSelected] = useState(0);
+  const [isHotelSelected, setIsHotelSelected] = useState(false);
   const [isRemote, setIsRemote] = useState(true);
   const [isSelected, setIsSelected] = useState(0);
+  const [ticketTypeInPerson, setTicketTypeInPerson] = useState();
+  const ticketTypeFiltered = ticketType?.filter((type) => type.includesHotel === false);
 
   return (
     <>
       <PaymentText>Primeiro, escolha sua modalidade de ingresso</PaymentText>
       <CardsContainer>
-        {ticketType?.map((type, index) => (
+        {ticketTypeFiltered?.map((type, index) => (
           <PaymentCard
             isSelected={isSelected}
             onClick={() => {
               setIsSelected(type.id);
               if (type.isRemote === false) {
                 setIsRemote(false);
-                if (isHotelSelected === 0) {
+                setTicketTypeInPerson(ticketType.filter((type) => type.isRemote === false));
+                if (isHotelSelected === false) {
                   setIsAbleToReserve(false);
                 }
               } else {
                 setIsRemote(true);
-                setIsAbleToReserve(true);
-                setIsHotelSelected(0);
+                setIsAbleToReserve(type);
+                setIsHotelSelected(false);
               }
             }}
             id={type.id}
@@ -40,6 +43,7 @@ export default function SelectTicketType({ ticketType, setIsAbleToReserve }) {
         ''
       ) : (
         <SelectIncludesHotel
+          ticketTypeInPerson={ticketTypeInPerson}
           setIsAbleToReserve={setIsAbleToReserve}
           setIsHotelSelected={setIsHotelSelected}
           isHotelSelected={isHotelSelected}
