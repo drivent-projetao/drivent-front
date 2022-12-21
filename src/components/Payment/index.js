@@ -1,107 +1,42 @@
-import styled from 'styled-components';
-import { useContext } from 'react';
-import useTicket from '../../hooks/api/useTicket';
-import PaymentForm from './PaymentForm';
-import { useEffect, useState } from 'react';
-import PaymentContext from '../../contexts/PaymentContext';
-import PaidMessage from './PaidMessage';
-import useEnrollment from '../../hooks/api/useEnrollment';
+import { useState, useEffect } from 'react';
 import WarningMessage from './WarningMessage';
+import { PaymentTitle } from './paymentStyle';
+import useEnrollment from '../../hooks/api/useEnrollment';
+import useTicketType from '../../hooks/api/useTicketTypes';
+import SelectTicketType from './SelectTicketType';
+import ReserveTicket from './ReserveTicket';
+import useTicket from '../../hooks/api/useTicket';
+import MakePayment from './MakePayment';
 
 export default function PaymentPage() {
-  const { 
-    setTicketId,
-    paidTicket,
-    setPaidTicket,
-  } = useContext(PaymentContext);
-  const { ticket } = useTicket();
+  const [hasEnrollment, setHasEnrollment] = useState(false);
+  const [isAbleToReserve, setIsAbleToReserve] = useState(false);
+  const [hasTicketReserved, setHasTicketReserved] = useState(false);
+  const { ticketType } = useTicketType();
   const { enrollment } = useEnrollment();
-
-  const [ticketPrice, setTicketPrice] = useState(0);
-  const [ticketType, setTicketType] = useState('');
-
-  const warningMessage = 'Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso';
-
+  const { ticket } = useTicket();
   useEffect(() => {
-    if(ticket) {
-      setTicketId(ticket.id);
-      setTicketPrice(ticket.TicketType.price);
-      
-      if(ticket.TicketType.isRemote === true) {
-        setTicketType('Online');
-      } else if (ticket.TicketType.isRemote === false && ticket.TicketType.includesHotel === true) {
-        setTicketType('Presencial + Hotel');
-        setTicketPrice(ticket.TicketType.price);
-      } else {
-        setTicketType('Presencial');
-      }
-
-      if(ticket.status === 'PAID') {
-        setPaidTicket(true);
-      } else {
-        setPaidTicket(false);
-      }
+    if (enrollment) {
+      setHasEnrollment(true);
     }
-  }, [ticket, ticketPrice]);
+    if (ticket) {
+      setHasTicketReserved(true);
+    }
+  }, [enrollment, ticketType, hasEnrollment, ticket]);
 
   return (
     <>
-      {enrollment ? (
+      <PaymentTitle>Ingresso e pagamento</PaymentTitle>
+      {hasTicketReserved ? (
+        <MakePayment />
+      ) : hasEnrollment ? (
         <>
-          <Title>Ingresso escolhido</Title>
-          <PaymentBox>
-            <PaymentType>{ticketType}</PaymentType>
-            <PaymentValue>R${ticketPrice}</PaymentValue>
-          </PaymentBox>
-          <Title>Pagamento</Title>
-          {paidTicket === false ? <PaymentForm /> : <PaidMessage />}
+          <SelectTicketType setIsAbleToReserve={setIsAbleToReserve} ticketType={ticketType} />
+          {isAbleToReserve ? <ReserveTicket setHasTicketReserved={setHasTicketReserved} isAbleToReserve={isAbleToReserve} /> : ''}
         </>
       ) : (
-        <WarningMessage message={warningMessage} />
+        <WarningMessage message={'Você precisa completar sua inscrição antes\nde prosseguir pra escolha de ingresso'} />
       )}
     </>
   );
 }
-
-//<AlignWarning><WarningText>Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso</WarningText></AlignWarning>
-
-const PageHeader = styled.div`
-  font-size: 34px;
-  margin-bottom: 36px;
-`;
-
-const Title = styled.h4`
-  font-size: 20px;
-  font-weight: 400;
-  color: #8e8e8e;
-  margin-bottom: 17px;
-`;
-
-const PaymentBox = styled.div`
-  width: 290px;
-  height: 108px;
-  border-radius: 20px;
-  background-color: #FFEED2;
-  border: 1px solid #FFEED2;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 30px;
-`;
-
-const PaymentType = styled.h6`
-  font-size: 16px;
-  color: #454545;
-  line-height: 18.75px;
-  font-weight: 400;
-  margin-bottom: 8px;
-`;
-
-const PaymentValue = styled.h6`
-  font-size: 14px;
-  color: #898989;
-  line-height: 16.41px;
-  font-weight: 400;
-`;
-
