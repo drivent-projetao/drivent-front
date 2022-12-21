@@ -4,7 +4,7 @@ import { PaymentText } from './paymentStyle';
 import useToken from '../../hooks/useToken';
 import { toast } from 'react-toastify';
 
-export default function ReserveTicket({ isAbleToReserve }) {
+export default function ReserveTicket({ isAbleToReserve, setHasTicketReserved }) {
   const body = {
     ticketTypeId: isAbleToReserve.id,
   };
@@ -15,6 +15,7 @@ export default function ReserveTicket({ isAbleToReserve }) {
 
     try {
       await postTicket(body, token);
+      setHasTicketReserved(true);
       toast('Reserva do ingresso realizada com sucesso!');
     } catch (err) {
       toast('Não foi possível fazer a reserva do ingresso!');
