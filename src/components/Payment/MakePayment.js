@@ -9,11 +9,7 @@ import useEnrollment from '../../hooks/api/useEnrollment';
 import WarningMessage from '../WarningMessage';
 
 export default function MakePayment() {
-  const { 
-    setTicketId,
-    paidTicket,
-    setPaidTicket,
-  } = useContext(PaymentContext);
+  const { setTicketId, paidTicket, setPaidTicket } = useContext(PaymentContext);
   const { ticket } = useTicket();
   const { enrollment } = useEnrollment();
 
@@ -23,11 +19,11 @@ export default function MakePayment() {
   const warningMessage = 'Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso';
 
   useEffect(() => {
-    if(ticket) {
+    if (ticket) {
       setTicketId(ticket.id);
       setTicketPrice(ticket.TicketType.price);
-      
-      if(ticket.TicketType.isRemote === true) {
+
+      if (ticket.TicketType.isRemote === true) {
         setTicketType('Online');
       } else if (ticket.TicketType.isRemote === false && ticket.TicketType.includesHotel === true) {
         setTicketType('Presencial + Hotel');
@@ -36,7 +32,7 @@ export default function MakePayment() {
         setTicketType('Presencial');
       }
 
-      if(ticket.status === 'PAID') {
+      if (ticket.status === 'PAID') {
         setPaidTicket(true);
       } else {
         setPaidTicket(false);
@@ -63,11 +59,6 @@ export default function MakePayment() {
   );
 }
 
-const PageHeader = styled.div`
-  font-size: 34px;
-  margin-bottom: 36px;
-`;
-
 const Title = styled.h4`
   font-size: 20px;
   font-weight: 400;
@@ -79,8 +70,8 @@ const PaymentBox = styled.div`
   width: 290px;
   height: 108px;
   border-radius: 20px;
-  background-color: #FFEED2;
-  border: 1px solid #FFEED2;
+  background-color: #ffeed2;
+  border: 1px solid #ffeed2;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -102,4 +93,3 @@ const PaymentValue = styled.h6`
   line-height: 16.41px;
   font-weight: 400;
 `;
-
