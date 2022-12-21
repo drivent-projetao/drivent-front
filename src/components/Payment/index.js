@@ -20,7 +20,6 @@ export default function PaymentPage() {
   const [ticketPrice, setTicketPrice] = useState(0);
   const [ticketType, setTicketType] = useState('');
 
-  const hotelPrice = 350;
   const warningMessage = 'Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso';
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export default function PaymentPage() {
         setTicketType('Online');
       } else if (ticket.TicketType.isRemote === false && ticket.TicketType.includesHotel === true) {
         setTicketType('Presencial + Hotel');
-        setTicketPrice(hotelPrice + ticket.TicketType.price);
+        setTicketPrice(ticket.TicketType.price);
       } else {
         setTicketType('Presencial');
       }
@@ -47,7 +46,6 @@ export default function PaymentPage() {
 
   return (
     <>
-      <PageHeader>Ingresso e pagamento</PageHeader>
       {enrollment ? (
         <>
           <Title>Ingresso escolhido</Title>
