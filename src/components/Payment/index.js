@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import WarningMessage from './WarningMessage';
 import { PaymentTitle } from './paymentStyle';
 import useEnrollment from '../../hooks/api/useEnrollment';
 import useTicketType from '../../hooks/api/useTicketTypes';
@@ -7,6 +6,7 @@ import SelectTicketType from './SelectTicketType';
 import ReserveTicket from './ReserveTicket';
 import useTicket from '../../hooks/api/useTicket';
 import MakePayment from './MakePayment';
+import WarningMessage from '../WarningMessage';
 
 export default function PaymentPage() {
   const [hasEnrollment, setHasEnrollment] = useState(false);

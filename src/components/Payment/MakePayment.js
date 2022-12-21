@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import PaymentContext from '../../contexts/PaymentContext';
 import PaidMessage from './PaidMessage';
 import useEnrollment from '../../hooks/api/useEnrollment';
-import WarningMessage from './WarningMessage';
+import WarningMessage from '../WarningMessage';
 
 export default function MakePayment() {
   const { 
@@ -20,7 +20,6 @@ export default function MakePayment() {
   const [ticketPrice, setTicketPrice] = useState(0);
   const [ticketType, setTicketType] = useState('');
 
-  const hotelPrice = 350;
   const warningMessage = 'Você precisa completar sua inscrição antes de prosseguir pra escolha de ingresso';
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export default function MakePayment() {
         setTicketType('Online');
       } else if (ticket.TicketType.isRemote === false && ticket.TicketType.includesHotel === true) {
         setTicketType('Presencial + Hotel');
-        setTicketPrice(hotelPrice + ticket.TicketType.price);
+        setTicketPrice(ticket.TicketType.price);
       } else {
         setTicketType('Presencial');
       }
@@ -47,7 +46,6 @@ export default function MakePayment() {
 
   return (
     <>
-      <PageHeader>Ingresso e pagamento</PageHeader>
       {enrollment ? (
         <>
           <Title>Ingresso escolhido</Title>
