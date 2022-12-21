@@ -22,7 +22,6 @@ export default function PaymentPage() {
     if (ticket) {
       setHasTicketReserved(true);
     }
-    console.log(ticket);
   }, [enrollment, ticketType, hasEnrollment, ticket]);
 
   return (
