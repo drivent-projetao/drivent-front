@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { CgEnter, CgCloseO } from 'react-icons/cg';
+import { toast } from 'react-toastify';
+import useSaveApplication from '../../hooks/api/useSaveApplication';
 import useNumberOfUsersByActivity from '../../hooks/api/useNumberOfUsersByActivity';
 
 export default function ActivityCard({ activity }) {
@@ -17,13 +19,23 @@ export default function ActivityCard({ activity }) {
 
   const height = ((duration / hour) * heightHr).toString();
 
+  const { saveApplication } = useSaveApplication();
+
   const { numberOfUsersByActivity, numberOfUsersByActivityLoading } = useNumberOfUsersByActivity(activity.id);
   let availableCapacity = activity.capacity;
   if (numberOfUsersByActivityLoading === false) {
     availableCapacity = activity.capacity - numberOfUsersByActivity.numberOfUsers;
   }
 
-  function selectActivity() {}
+  async function selectActivity(activityId) {
+    try {
+      await saveApplication({ activityId });
+
+      toast('Inscrição realizada com sucesso!');
+    } catch (err) {
+      toast('Não foi possível realizar a inscrição!');
+    }
+  }
 
   return (
     <Card height={height}>
@@ -33,7 +45,7 @@ export default function ActivityCard({ activity }) {
           {startTime} - {endTime}
         </Times>
       </Description>
-      <AlignIcons onClick={selectActivity}>
+      <AlignIcons onClick={() => selectActivity(activity.id)}>
         {availableCapacity <= 0 ? (
           <>
             <IconClose />
