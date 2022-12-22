@@ -9,4 +9,13 @@ export async function getActivitiesWithDates(token) {
 
   return response.data;
 }
-//
+
+export async function getNumberOfUsersByActivity(token, activityId) {
+  const response = await api.get(`/activities/${activityId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}

@@ -1,6 +1,7 @@
 import FilterActivitiesMenu from './FilterActivitiesMenu';
 import useActivitiesWithDates from '../../hooks/api/useActivitiesWithDates';
 import { useState } from 'react';
+import AvailableSlots from './AvailableSlots';
 
 export default function ActivitiesTab() {
   const [selectedDate, setSelectedDate] = useState('');
@@ -8,7 +9,7 @@ export default function ActivitiesTab() {
 
   const filteredDates = activitiesWithDates?.dates.map((d) => d === selectedDate);
   const filteredActivities = activitiesWithDates?.activities.filter((a, i) => filteredDates[i]);
-
+  
   return (
     <>
       <FilterActivitiesMenu
@@ -21,7 +22,10 @@ export default function ActivitiesTab() {
           <h2>Activities Cronogram</h2>
           <br />
           {filteredActivities.map((a, index) => (
-            <h1 key={index}>{`${a.name} - ${a.startTime} - ${a.endTime}`}</h1>
+            <div key={index}>
+              <h1>{`${a.name} - ${a.startTime} - ${a.endTime}`}</h1>
+              <AvailableSlots capacity={a.capacity} activityId={a.id} />
+            </div>
           ))}
         </>
       ) : (
