@@ -60,7 +60,7 @@ const RoomContainer = styled.div`
   opacity: ${(props) => (props.isFull ? '.5' : '1')};
   background-color: ${(props) => (
     props.isFull ? 
-      '#CCC' : (
+      '#E9E9E9' : (
         props.selected? '#FFEED2' : 'transparent'
       ))};
 
