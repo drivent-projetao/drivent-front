@@ -32,7 +32,7 @@ export default function FilterActivitiesMenu({ dates, selectedDate, setSelectedD
   return (
     <>
       {selectedDate === '' ? <MenuHeader>Primeiro, filtre pelo dia do evento</MenuHeader> : <></>}
-      <DayBrowser>
+      <DateBrowser>
         {dates.map((date, index) => (
           <Date
             key={index}
@@ -42,7 +42,7 @@ export default function FilterActivitiesMenu({ dates, selectedDate, setSelectedD
             handleSelectDate={() => handleSelectDate(date)}
           ></Date>
         ))}
-      </DayBrowser>
+      </DateBrowser>
     </>
   );
 }
@@ -62,7 +62,7 @@ const MenuHeader = styled.div`
   animation-duration: 1s;
 `;
 
-const DayBrowser = styled.div`
+const DateBrowser = styled.div`
   display: flex;
   flex-direction: row;
   gap: 17px;
