@@ -19,14 +19,12 @@ export default function ActivitiesBoards({ selectedDate }) {
     setLocations(response);
   }, [selectedDate]);
 
-  console.log(locations);
-
   return (
     <Cards>
       {locations.length > 0 ? (
         <LocationCard locations={locations}/>
       ) : (
-        <p>oi</p>
+        <></>
       )}
     </Cards>
   );
