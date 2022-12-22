@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { CgEnter } from 'react-icons/cg';
+import { CgEnter, CgCloseO } from 'react-icons/cg';
 import useNumberOfUsersByActivity from '../../hooks/api/useNumberOfUsersByActivity';
 
 export default function ActivityCard({ activity }) {
@@ -16,7 +16,7 @@ export default function ActivityCard({ activity }) {
   }
 
   const height = ((duration / hour) * heightHr).toString();
-  
+
   const { numberOfUsersByActivity, numberOfUsersByActivityLoading } = useNumberOfUsersByActivity(activity.id);
   let availableCapacity = activity.capacity;
   if (numberOfUsersByActivityLoading === false) {
@@ -34,8 +34,17 @@ export default function ActivityCard({ activity }) {
         </Times>
       </Description>
       <AlignIcons onClick={selectActivity}>
-        <Icon />
-        <IconText>{availableCapacity}</IconText>
+        {availableCapacity <= 0 ? (
+          <>
+            <IconClose />
+            <IconText color="#CC6666">Esgotado</IconText>
+          </>
+        ) : (
+          <>
+            <IconEnter />
+            <IconText color="#078632">{availableCapacity}</IconText>
+          </>
+        )}
       </AlignIcons>
     </Card>
   );
@@ -77,14 +86,20 @@ const Times = styled.h6`
   line-height: 14.06px;
 `;
 
-const Icon = styled(CgEnter)`
+const IconEnter = styled(CgEnter)`
   font-size: 20px;
   color: #078632;
   margin-bottom: 4.5px;
 `;
 
+const IconClose = styled(CgCloseO)`
+  font-size: 20px;
+  color: #cc6666;
+  margin-bottom: 4.5px;
+`;
+
 const IconText = styled.h6`
-  color: #078632;
+  color: ${(props) => props.color};
   font-size: 9px;
   font-weight: 400;
 `;
