@@ -9,4 +9,14 @@ export async function getActivitiesDates(token) {
 
   return response.data;
 }
+
+export async function getActivitiesByLocation(date, token) {
+  const response = await api.get(`/activities/${date}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
 //
