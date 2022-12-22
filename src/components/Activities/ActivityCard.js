@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { CgEnter } from 'react-icons/cg';
+import { toast } from 'react-toastify';
+import useSaveApplication from '../../hooks/api/useSaveApplication';
 
 export default function ActivityCard({ activity }) {
   const startTime = (activity.startTime).substr(11, 5);
@@ -16,7 +18,16 @@ export default function ActivityCard({ activity }) {
 
   const height = ((duration / hour) * heightHr).toString();
 
-  function selectActivity() {
+  const { saveApplication } = useSaveApplication();
+
+  async function selectActivity(activityId) {
+    try {
+      await saveApplication({ activityId });
+
+      toast('Inscrição realizada com sucesso!');
+    } catch (err) {
+      toast('Não foi possível realizar a inscrição!');
+    }
   }
 
   return (
@@ -25,7 +36,7 @@ export default function ActivityCard({ activity }) {
         <ActivityName>{activity.name}</ActivityName>
         <Times>{startTime} - {endTime}</Times>
       </Description>
-      <AlignIcons onClick={selectActivity}>
+      <AlignIcons onClick={() => selectActivity(activity.id)}>
         <Icon />
         <IconText>{activity.capacity}</IconText>
       </AlignIcons>
