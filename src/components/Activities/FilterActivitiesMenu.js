@@ -1,6 +1,16 @@
 import styled, { keyframes } from 'styled-components';
 
-function Date({ content, index, selected, handleSelectDate }) {
+function formatDateContent(date) {
+  const dateArray = date.split(',');
+  const monthAndDay = dateArray[1].slice(1).split('/').slice(1);
+  const month = monthAndDay[0];
+  const day = monthAndDay[1];
+  const content = `${dateArray[0]}, ${day}/${month}`;
+  return content;
+}
+
+function Date({ date, index, selected, handleSelectDate }) {
+  const content = formatDateContent(date);
   return (
     <>
       <DateContainer index={index} selected={selected} onClick={handleSelectDate}>
@@ -18,17 +28,16 @@ export default function FilterActivitiesMenu({ dates, selectedDate, setSelectedD
       setSelectedDate(date);
     }
   };
-  const datesUnique = [...new Set(dates)];
 
   return (
     <>
       {selectedDate === '' ? <MenuHeader>Primeiro, filtre pelo dia do evento</MenuHeader> : <></>}
       <DayBrowser>
-        {datesUnique.map((date, index) => (
+        {dates.map((date, index) => (
           <Date
             key={index}
             index={index}
-            content={date}
+            date={date}
             selected={date === selectedDate}
             handleSelectDate={() => handleSelectDate(date)}
           ></Date>
