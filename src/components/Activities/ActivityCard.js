@@ -1,9 +1,11 @@
 import styled from 'styled-components';
-import { CgEnter, CgCloseO } from 'react-icons/cg';
+import { useState, useEffect } from 'react';
+import { CgEnter, CgCloseO, CgCheckO } from 'react-icons/cg';
 import { toast } from 'react-toastify';
+
+import useApplication from '../../hooks/api/useApplication';
 import useSaveApplication from '../../hooks/api/useSaveApplication';
 import useNumberOfUsersByActivity from '../../hooks/api/useNumberOfUsersByActivity';
-import { useState, useEffect } from 'react';
 
 export default function ActivityCard({ activity, locations }) {
   const startTime = activity.startTime.substr(11, 5);
@@ -15,6 +17,7 @@ export default function ActivityCard({ activity, locations }) {
   const duration = msDuration / msToHour;
 
   const [availableCapacity, setAvailableCapacity] = useState(activity.capacity);
+  const [application, setApplications] = useState([]);
 
   if (duration > 60) {
     heightHr = 82;
@@ -22,14 +25,21 @@ export default function ActivityCard({ activity, locations }) {
 
   const height = ((duration / hour) * heightHr).toString();
 
+  const { getApplications } = useApplication();
   const { saveApplication } = useSaveApplication();
-
   const { getNumberOfUsersByActivity } = useNumberOfUsersByActivity(activity.id);
+
+  useEffect(async() => {
+    const result = await getApplications();
+    setApplications(result);
+  }, [availableCapacity]);
 
   useEffect(async() => {
     const result = await getNumberOfUsersByActivity();
     setAvailableCapacity(activity.capacity - result.numberOfUsers);
   }, [locations, availableCapacity]);
+
+  const isApplication = application.find(({ activityId }) => activityId === activity.id);
 
   async function selectActivity(activityId) {
     try {
@@ -64,8 +74,10 @@ export default function ActivityCard({ activity, locations }) {
           </>
         ) : (
           <>
-            <IconEnter />
-            <IconText color="#078632">{availableCapacity}</IconText>
+            { isApplication ? 
+              <><IconCheck /><IconText color="#078632">Inscrito</IconText></> : 
+              <><IconEnter /><IconText color="#078632">{availableCapacity}</IconText></>
+            }
           </>
         )}
       </AlignIcons>
@@ -113,11 +125,18 @@ const IconEnter = styled(CgEnter)`
   font-size: 20px;
   color: #078632;
   margin-bottom: 4.5px;
+  cursor: pointer;
 `;
 
 const IconClose = styled(CgCloseO)`
   font-size: 20px;
   color: #cc6666;
+  margin-bottom: 4.5px;
+`;
+
+const IconCheck = styled(CgCheckO)`
+  font-size: 20px;
+  color: #078632;
   margin-bottom: 4.5px;
 `;
 
