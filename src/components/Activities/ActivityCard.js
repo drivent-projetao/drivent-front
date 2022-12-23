@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { CgEnter } from 'react-icons/cg';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { toast } from 'react-toastify';
+
 import useSaveApplication from '../../hooks/api/useSaveApplication';
 
 export default function ActivityCard({ activity }) {
