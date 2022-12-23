@@ -13,21 +13,13 @@ export default function ActivitiesBoards({ selectedDate }) {
   }
 
   const date = formatDateContent(selectedDate);
-  
+
   useEffect(async() => {
     const response = await getLocations(date);
     setLocations(response);
   }, [selectedDate]);
 
-  return (
-    <Cards>
-      {locations.length > 0 ? (
-        <LocationCard locations={locations}/>
-      ) : (
-        <></>
-      )}
-    </Cards>
-  );
+  return <Cards>{locations.length > 0 ? <LocationCard locations={locations} /> : <></>}</Cards>;
 }
 
 const Cards = styled.div`

@@ -3,8 +3,9 @@ import { CgEnter, CgCloseO } from 'react-icons/cg';
 import { toast } from 'react-toastify';
 import useSaveApplication from '../../hooks/api/useSaveApplication';
 import useNumberOfUsersByActivity from '../../hooks/api/useNumberOfUsersByActivity';
+import { useState, useEffect } from 'react';
 
-export default function ActivityCard({ activity }) {
+export default function ActivityCard({ activity, locations }) {
   const startTime = activity.startTime.substr(11, 5);
   const endTime = activity.endTime.substr(11, 5);
   const msDuration = new Date(activity.endTime) - new Date(activity.startTime);
@@ -12,6 +13,8 @@ export default function ActivityCard({ activity }) {
   const msToHour = 60000;
   let heightHr = 79;
   const duration = msDuration / msToHour;
+
+  const [availableCapacity, setAvailableCapacity] = useState(activity.capacity);
 
   if (duration > 60) {
     heightHr = 82;
@@ -21,16 +24,17 @@ export default function ActivityCard({ activity }) {
 
   const { saveApplication } = useSaveApplication();
 
-  const { numberOfUsersByActivity, numberOfUsersByActivityLoading } = useNumberOfUsersByActivity(activity.id);
-  let availableCapacity = activity.capacity;
-  if (numberOfUsersByActivityLoading === false) {
-    availableCapacity = activity.capacity - numberOfUsersByActivity.numberOfUsers;
-  }
+  const { getNumberOfUsersByActivity } = useNumberOfUsersByActivity(activity.id);
+
+  useEffect(async() => {
+    const result = await getNumberOfUsersByActivity();
+    setAvailableCapacity(activity.capacity - result.numberOfUsers);
+  }, [locations, availableCapacity]);
 
   async function selectActivity(activityId) {
     try {
       await saveApplication({ activityId });
-
+      setAvailableCapacity(availableCapacity - 1);
       toast('Inscrição realizada com sucesso!');
     } catch (err) {
       toast('Não foi possível realizar a inscrição!');
@@ -45,7 +49,14 @@ export default function ActivityCard({ activity }) {
           {startTime} - {endTime}
         </Times>
       </Description>
-      <AlignIcons onClick={() => selectActivity(activity.id)}>
+      <AlignIcons
+        onClick={() => {
+          if (availableCapacity <= 0) {
+            return;
+          }
+          selectActivity(activity.id);
+        }}
+      >
         {availableCapacity <= 0 ? (
           <>
             <IconClose />
