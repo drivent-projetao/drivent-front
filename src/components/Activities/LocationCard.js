@@ -9,9 +9,10 @@ export default function LocationCard({ locations }) {
           <MainContainer>
             <Title key={i}>{l.name}</Title>
             <LocalContainer>
-              <ActivitiesCards activities={l.Activity}/>
+              <ActivitiesCards locations={locations} activities={l.Activity} />
             </LocalContainer>
-          </MainContainer>);
+          </MainContainer>
+        );
       })}
     </>
   );

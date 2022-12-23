@@ -1,20 +1,19 @@
-import { postTicket } from '../../services/ticketApi';
 import Button from '../Form/Button';
 import { PaymentText } from './paymentStyle';
-import useToken from '../../hooks/useToken';
 import { toast } from 'react-toastify';
+import useReserveTicket from '../../hooks/api/useReserveTicket';
 
 export default function ReserveTicket({ isAbleToReserve, setHasTicketReserved }) {
   const body = {
     ticketTypeId: isAbleToReserve.id,
   };
-  const token = useToken();
-  //todo: fazer hook do postticket, usar o loading pra desabilitar o botao
+  const { reserveTicket, reserveTicketLoading } = useReserveTicket();
+
   async function handleForm(e) {
     e.preventDefault();
 
     try {
-      await postTicket(body, token);
+      await reserveTicket(body);
       setHasTicketReserved(true);
       toast('Reserva do ingresso realizada com sucesso!');
     } catch (err) {
@@ -28,7 +27,9 @@ export default function ReserveTicket({ isAbleToReserve, setHasTicketReserved })
         Fechado! O total ficou em <span>R$ {isAbleToReserve.price}</span>. Agora é só confirmar:
       </PaymentText>
       <form onSubmit={handleForm}>
-        <Button type="submit">RESERVAR INGRESSO</Button>
+        <Button type="submit" disabled={reserveTicketLoading}>
+          RESERVAR INGRESSO
+        </Button>
       </form>
     </>
   );
