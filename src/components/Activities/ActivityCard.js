@@ -1,18 +1,22 @@
 import styled from 'styled-components';
-import { CgEnter } from 'react-icons/cg';
+import { CgEnter, CgCloseO } from 'react-icons/cg';
 import { toast } from 'react-toastify';
 import useSaveApplication from '../../hooks/api/useSaveApplication';
+import useNumberOfUsersByActivity from '../../hooks/api/useNumberOfUsersByActivity';
+import { useState, useEffect } from 'react';
 
-export default function ActivityCard({ activity }) {
-  const startTime = (activity.startTime).substr(11, 5);
-  const endTime = (activity.endTime).substr(11, 5);
+export default function ActivityCard({ activity, locations }) {
+  const startTime = activity.startTime.substr(11, 5);
+  const endTime = activity.endTime.substr(11, 5);
   const msDuration = new Date(activity.endTime) - new Date(activity.startTime);
   const hour = 60;
   const msToHour = 60000;
   let heightHr = 79;
   const duration = msDuration / msToHour;
 
-  if(duration > 60) {
+  const [availableCapacity, setAvailableCapacity] = useState(activity.capacity);
+
+  if (duration > 60) {
     heightHr = 82;
   }
 
@@ -20,10 +24,17 @@ export default function ActivityCard({ activity }) {
 
   const { saveApplication } = useSaveApplication();
 
+  const { getNumberOfUsersByActivity } = useNumberOfUsersByActivity(activity.id);
+
+  useEffect(async() => {
+    const result = await getNumberOfUsersByActivity();
+    setAvailableCapacity(activity.capacity - result.numberOfUsers);
+  }, [locations, availableCapacity]);
+
   async function selectActivity(activityId) {
     try {
       await saveApplication({ activityId });
-
+      setAvailableCapacity(availableCapacity - 1);
       toast('Inscrição realizada com sucesso!');
     } catch (err) {
       toast('Não foi possível realizar a inscrição!');
@@ -34,11 +45,29 @@ export default function ActivityCard({ activity }) {
     <Card height={height}>
       <Description>
         <ActivityName>{activity.name}</ActivityName>
-        <Times>{startTime} - {endTime}</Times>
+        <Times>
+          {startTime} - {endTime}
+        </Times>
       </Description>
-      <AlignIcons onClick={() => selectActivity(activity.id)}>
-        <Icon />
-        <IconText>{activity.capacity}</IconText>
+      <AlignIcons
+        onClick={() => {
+          if (availableCapacity <= 0) {
+            return;
+          }
+          selectActivity(activity.id);
+        }}
+      >
+        {availableCapacity <= 0 ? (
+          <>
+            <IconClose />
+            <IconText color="#CC6666">Esgotado</IconText>
+          </>
+        ) : (
+          <>
+            <IconEnter />
+            <IconText color="#078632">{availableCapacity}</IconText>
+          </>
+        )}
       </AlignIcons>
     </Card>
   );
@@ -49,9 +78,7 @@ const Card = styled.div`
   border-radius: 5px;
   border: 1px solid #f1f1f1;
   width: 265px;
-  height: ${(props) => (
-    props.height + 'px;'
-  )};
+  height: ${(props) => props.height + 'px;'};
   display: flex;
   padding: 9px;
   padding-right: 0px;
@@ -82,14 +109,20 @@ const Times = styled.h6`
   line-height: 14.06px;
 `;
 
-const Icon = styled(CgEnter)`
-    font-size: 20px;
-    color: #078632;
-    margin-bottom: 4.5px;
+const IconEnter = styled(CgEnter)`
+  font-size: 20px;
+  color: #078632;
+  margin-bottom: 4.5px;
+`;
+
+const IconClose = styled(CgCloseO)`
+  font-size: 20px;
+  color: #cc6666;
+  margin-bottom: 4.5px;
 `;
 
 const IconText = styled.h6`
-  color: #078632;
+  color: ${(props) => props.color};
   font-size: 9px;
   font-weight: 400;
 `;

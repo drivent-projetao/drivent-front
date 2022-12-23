@@ -1,12 +1,10 @@
 import ActivityCard from './ActivityCard';
 
-export default function ActivitiesCards({ activities }) {
-  return ( 
+export default function ActivitiesCards({ activities, locations }) {
+  return (
     <>
       {activities.map((a, i) => {
-        return (
-          <ActivityCard key={i} activity={a}/>
-        );
+        return <ActivityCard locations={locations} key={i} activity={a} />;
       })}
     </>
   );
