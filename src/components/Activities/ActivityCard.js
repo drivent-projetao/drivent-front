@@ -67,15 +67,12 @@ export default function ActivityCard({ activity, locations }) {
           selectActivity(activity.id);
         }}
       >
-        {availableCapacity <= 0 ? (
-          <>
-            <IconClose />
-            <IconText color="#CC6666">Esgotado</IconText>
-          </>
+        { isApplication ? (
+          <><IconCheck /><IconText color="#078632">Inscrito</IconText></>
         ) : (
           <>
-            { isApplication ? 
-              <><IconCheck /><IconText color="#078632">Inscrito</IconText></> : 
+            { availableCapacity <= 0 ? 
+              <><IconClose /><IconText color="#CC6666">Esgotado</IconText></>: 
               <><IconEnter /><IconText color="#078632">{availableCapacity}</IconText></>
             }
           </>
