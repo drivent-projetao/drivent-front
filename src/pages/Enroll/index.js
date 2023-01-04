@@ -14,24 +14,29 @@ import EventInfoContext from '../../contexts/EventInfoContext';
 import useSignUp from '../../hooks/api/useSignUp';
 
 export default function Enroll() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [form, setForm] = useState({});
 
   const { loadingSignUp, signUp } = useSignUp();
 
   const navigate = useNavigate();
-  
+
+  function handleForm({ name, value }) {
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  }
+
   const { eventInfo } = useContext(EventInfoContext);
 
   async function submit(event) {
     event.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (form.password !== form.confirmPassword) {
       toast('As senhas devem ser iguais!');
     } else {
       try {
-        await signUp(email, password);
+        await signUp(form.email, form.password);
         toast('Inscrito com sucesso! Por favor, faça login.');
         navigate('/sign-in');
       } catch (error) {
@@ -49,10 +54,33 @@ export default function Enroll() {
       <Row>
         <Label>Inscrição</Label>
         <form onSubmit={submit}>
-          <Input label="E-mail" type="text" fullWidth value={email} onChange={e => setEmail(e.target.value)} />
-          <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
-          <Input label="Repita sua senha" type="password" fullWidth value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
-          <Button type="submit" color="primary" fullWidth disabled={loadingSignUp}>Inscrever</Button>
+          <Input
+            label="E-mail"
+            type="text"
+            name="email"
+            fullWidth
+            value={form.email}
+            onChange={(e) => handleForm({ name: e.target.name, value: e.target.value })}
+          />
+          <Input
+            label="Senha"
+            type="password"
+            name="password"
+            fullWidth
+            value={form.password}
+            onChange={(e) => handleForm({ name: e.target.name, value: e.target.value })}
+          />
+          <Input
+            label="Repita sua senha"
+            type="password"
+            name="confirmPassword"
+            fullWidth
+            value={form.confirmPassword}
+            onChange={(e) => handleForm({ name: e.target.name, value: e.target.value })}
+          />
+          <Button type="submit" color="primary" fullWidth disabled={loadingSignUp}>
+            Inscrever
+          </Button>
         </form>
       </Row>
       <Row>
