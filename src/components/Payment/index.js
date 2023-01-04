@@ -24,18 +24,32 @@ export default function PaymentPage() {
     }
   }, [enrollment, ticketType, hasEnrollment, ticket]);
 
+  if (hasTicketReserved) {
+    return (
+      <>
+        <PaymentTitle>Ingresso e pagamento</PaymentTitle>
+        <MakePayment />
+      </>
+    );
+  }
+
+  if (!hasEnrollment) {
+    return (
+      <>
+        <PaymentTitle>Ingresso e pagamento</PaymentTitle>
+        <WarningMessage message={'Você precisa completar sua inscrição antes\nde prosseguir pra escolha de ingresso'} />
+      </>
+    );
+  }
+
   return (
     <>
       <PaymentTitle>Ingresso e pagamento</PaymentTitle>
-      {hasTicketReserved ? (
-        <MakePayment />
-      ) : hasEnrollment ? (
-        <>
-          <SelectTicketType setIsAbleToReserve={setIsAbleToReserve} ticketType={ticketType} />
-          {isAbleToReserve ? <ReserveTicket setHasTicketReserved={setHasTicketReserved} isAbleToReserve={isAbleToReserve} /> : ''}
-        </>
+      <SelectTicketType setIsAbleToReserve={setIsAbleToReserve} ticketType={ticketType} />
+      {isAbleToReserve ? (
+        <ReserveTicket setHasTicketReserved={setHasTicketReserved} isAbleToReserve={isAbleToReserve} />
       ) : (
-        <WarningMessage message={'Você precisa completar sua inscrição antes\nde prosseguir pra escolha de ingresso'} />
+        ''
       )}
     </>
   );
