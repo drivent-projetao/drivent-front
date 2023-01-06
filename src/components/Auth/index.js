@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
 
 import Container from '../Container';
 
@@ -26,4 +28,20 @@ export const Row = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+`;
+
+export const Icons = styled.div`
+  display: flex;
+  padding-top: 10px;
+  gap: 10px;
+`;
+
+export const Google = styled(FcGoogle)`
+  font-size: 30px;
+  cursor: pointer;
+`;
+
+export const Github = styled(FaGithub)`
+  font-size: 30px;
+  cursor: pointer;
 `;
