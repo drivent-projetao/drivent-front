@@ -24,8 +24,7 @@ import useSignIn from '../../hooks/api/useSignIn';
 import useAuthSignIn from '../../hooks/api/useAuthSignIn';
 
 export default function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({});
 
   const { loadingSignIn, signIn } = useSignIn();
   const { authSignIn } = useAuthSignIn();
@@ -34,12 +33,19 @@ export default function SignIn() {
   const { setUserData } = useContext(UserContext);
 
   const navigate = useNavigate();
-  
+
+  function handleForm({ name, value }) {
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  }
+
   async function submit(event) {
     event.preventDefault();
 
     try {
-      const userData = await signIn(email, password);
+      const userData = await signIn(form.email, form.password);
       setUserData(userData);
       toast('Login realizado com sucesso!');
       navigate('/dashboard');
@@ -104,9 +110,25 @@ export default function SignIn() {
       <Row>
         <Label>Entrar</Label>
         <form onSubmit={submit}>
-          <Input label="E-mail" type="text" fullWidth value={email} onChange={e => setEmail(e.target.value)} />
-          <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
-          <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
+          <Input
+            label="E-mail"
+            type="text"
+            name="email"
+            fullWidth
+            value={form.email}
+            onChange={(e) => handleForm({ name: e.target.name, value: e.target.value })}
+          />
+          <Input
+            label="Senha"
+            name="password"
+            type="password"
+            fullWidth
+            value={form.password}
+            onChange={(e) => handleForm({ name: e.target.name, value: e.target.value })}
+          />
+          <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>
+            Entrar
+          </Button>
         </form>
       </Row>
       <Row>
